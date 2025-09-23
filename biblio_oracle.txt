@@ -1,0 +1,32 @@
+CREATE TABLE Etudiant(
+   id_etudiant NUMBER(10),
+   nom VARCHAR2(50)  NOT NULL,
+   prenoms VARCHAR2(50)  NOT NULL,
+   PRIMARY KEY(id_etudiant)
+);
+
+CREATE TABLE Auteurs(
+   id_auteur NUMBER(10),
+   prenoms VARCHAR2(50)  NOT NULL,
+   nom VARCHAR2(50)  NOT NULL,
+   PRIMARY KEY(id_auteur)
+);
+
+CREATE TABLE livres(
+   id_livre NUMBER(10),
+   titre VARCHAR2(50)  NOT NULL,
+   langue VARCHAR2(50)  NOT NULL,
+   id_auteur NUMBER(10) NOT NULL,
+   PRIMARY KEY(id_livre),
+   FOREIGN KEY(id_auteur) REFERENCES Auteurs(id_auteur)
+);
+
+CREATE TABLE etudiants_livres(
+   id_etudiant NUMBER(10),
+   id_livre NUMBER(10),
+   date_emprunt DATE NOT NULL,
+   date_retour_prevue DATE NOT NULL,
+   PRIMARY KEY(id_etudiant, id_livre),
+   FOREIGN KEY(id_etudiant) REFERENCES Etudiant(id_etudiant),
+   FOREIGN KEY(id_livre) REFERENCES livres(id_livre)
+);
