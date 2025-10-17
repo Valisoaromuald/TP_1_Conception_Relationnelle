@@ -1,0 +1,48 @@
+CREATE TABLE Categorie(
+   id_categorie INTEGER,
+   libelle VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id_categorie)
+);
+
+CREATE TABLE participants(
+   id_participant INTEGER,
+   nom VARCHAR(50)  NOT NULL,
+   prenoms VARCHAR(50) ,
+   PRIMARY KEY(id_participant)
+);
+
+CREATE TABLE rallye(
+   id_rallye INTEGER,
+   nom VARCHAR(50)  NOT NULL,
+   date_realisation DATE NOT NULL,
+   PRIMARY KEY(id_rallye)
+);
+
+CREATE TABLE Equipage(
+   id_equipage INTEGER,
+   id_categorie INTEGER NOT NULL,
+   pilote INTEGER NOT NULL,
+   copilote INTEGER NOT NULL,
+   PRIMARY KEY(id_equipage),
+   FOREIGN KEY(id_categorie) REFERENCES Categorie(id_categorie),
+   FOREIGN KEY(pilote) REFERENCES participants(id_participant),
+   FOREIGN KEY(copilote) REFERENCES participants(id_participant)
+);
+
+CREATE TABLE Speciales(
+   id_speciale INTEGER,
+   distance NUMERIC(10,2)   NOT NULL,
+   nom_special VARCHAR(50)  NOT NULL,
+   id_rallye INTEGER NOT NULL,
+   PRIMARY KEY(id_speciale),
+   FOREIGN KEY(id_rallye) REFERENCES rallye(id_rallye)
+);
+
+CREATE TABLE special_equipage(
+   id_equipage INTEGER,
+   id_speciale INTEGER,
+   duree TIME NOT NULL,
+   PRIMARY KEY(id_equipage, id_speciale),
+   FOREIGN KEY(id_equipage) REFERENCES Equipage(id_equipage),
+   FOREIGN KEY(id_speciale) REFERENCES Speciales(id_speciale)
+);
