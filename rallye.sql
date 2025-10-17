@@ -1,3 +1,4 @@
+CREATE DATABASE application_rallye
 -- =============================
 -- TABLE Categorie
 -- =============================
@@ -140,6 +141,13 @@ select
     ORDER BY id_speciale
 
 -- Affichage du temps global
+
+CREATE OR REPLACE VIEW temps_global as
+select id_equipage,
+        sum(duree) as temps total
+    FROM Speciale_Equipage
+    GROUP BY id_equipage
+    ORDER BY temps_total asc;
 
 
 
