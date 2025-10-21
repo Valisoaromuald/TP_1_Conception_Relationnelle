@@ -1,76 +1,75 @@
-CREATE DATABASE application_rallye
 -- =============================
--- TABLE Categorie
+-- TABLE categorie
 -- =============================
-CREATE TABLE Categorie(
+CREATE TABLE categorie(
    id_categorie SERIAL PRIMARY KEY,
    libelle VARCHAR(50) NOT NULL
 );
 
 -- =============================
--- TABLE Participant
+-- TABLE participant
 -- =============================
-CREATE TABLE Participant(
+CREATE TABLE participant(
    id_participant SERIAL PRIMARY KEY,
    nom VARCHAR(50) NOT NULL,
    prenoms VARCHAR(50)
 );
 
 -- =============================
--- TABLE Rallye
+-- TABLE rallye
 -- =============================
-CREATE TABLE Rallye(
+CREATE TABLE rallye(
    id_rallye SERIAL PRIMARY KEY,
    nom VARCHAR(50) NOT NULL,
    date_realisation DATE NOT NULL
 );
 
 -- =============================
--- TABLE Equipage
+-- TABLE equipage
 -- =============================
-CREATE TABLE Equipage(
+CREATE TABLE equipage(
    id_equipage SERIAL PRIMARY KEY,
    id_categorie INTEGER NOT NULL,
    pilote INTEGER NOT NULL,
    copilote INTEGER NOT NULL,
-   FOREIGN KEY(id_categorie) REFERENCES Categorie(id_categorie),
-   FOREIGN KEY(pilote) REFERENCES Participant(id_participant),
-   FOREIGN KEY(copilote) REFERENCES Participant(id_participant)
+   FOREIGN KEY(id_categorie) REFERENCES categorie(id_categorie),
+   FOREIGN KEY(pilote) REFERENCES participant(id_participant),
+   FOREIGN KEY(copilote) REFERENCES participant(id_participant)
 );
 
 -- =============================
--- TABLE Speciale
+-- TABLE speciale
 -- =============================
-CREATE TABLE Speciale(
+CREATE TABLE speciale(
    id_speciale SERIAL PRIMARY KEY,
    distance NUMERIC(10,2) NOT NULL,
    nom_special VARCHAR(50) NOT NULL,
    id_rallye INTEGER NOT NULL,
-   FOREIGN KEY(id_rallye) REFERENCES Rallye(id_rallye)
+   FOREIGN KEY(id_rallye) REFERENCES rallye(id_rallye)
 );
 
 -- =============================
--- TABLE Speciale_Equipage
+-- TABLE speciale_equipage
 -- =============================
-CREATE TABLE Speciale_Equipage(
+CREATE TABLE speciale_equipage(
    id_equipage INTEGER NOT NULL,
    id_speciale INTEGER NOT NULL,
    duree INTERVAL NOT NULL,
    PRIMARY KEY(id_equipage, id_speciale),
-   FOREIGN KEY(id_equipage) REFERENCES Equipage(id_equipage),
-   FOREIGN KEY(id_speciale) REFERENCES Speciale(id_speciale)
+   FOREIGN KEY(id_equipage) REFERENCES equipage(id_equipage),
+   FOREIGN KEY(id_speciale) REFERENCES speciale(id_speciale)
 );
 
 
 -- donnees d'insertion
-INSERT INTO Categorie (libelle) VALUES
+INSERT INTO categorie (libelle) VALUES
 ('R5'),
 ('R4'),
 ('M12'),
 ('M11'),
 ('M10');
 
-INSERT INTO Participant (nom, prenoms) VALUES
+INSERT INTO participant (nom, prenoms) VALUES
 ('Ogier', 'Sébastien'),
 ('Landais', 'Vincent'),
 ('Rovanperä', 'Kalle'),
@@ -81,19 +80,19 @@ INSERT INTO Participant (nom, prenoms) VALUES
 ('Jarveoja', 'Martin');
 
 
-INSERT INTO Rallye (nom, date_realisation) VALUES
-('Rallye de Monte-Carlo', '2025-01-20'),
-('Rallye de Finlande', '2025-08-05');
+INSERT INTO rallye (nom, date_realisation) VALUES
+('rallye de Monte-Carlo', '2025-01-20'),
+('rallye de Finlande', '2025-08-05');
 
 
-INSERT INTO Equipage (id_categorie, pilote, copilote) VALUES
+INSERT INTO equipage (id_categorie, pilote, copilote) VALUES
 (1, 1, 2),  -- Ogier / Landais
 (1, 3, 4),  -- Rovanperä / Halttunen
 (1, 5, 6),  -- Neuville / Wydaeghe
 (1, 7, 8);  -- Tanak / Jarveoja
 
 
-INSERT INTO Speciale (distance, nom_special, id_rallye) VALUES
+INSERT INTO speciale (distance, nom_special, id_rallye) VALUES
 (18.20, 'Col de Turini', 1),
 (25.60, 'Sisteron', 1),
 (20.45, 'Gap', 1),
@@ -102,7 +101,7 @@ INSERT INTO Speciale (distance, nom_special, id_rallye) VALUES
 
 
 -- Monte-Carlo
-INSERT INTO Speciale_Equipage (id_equipage, id_speciale, duree) VALUES
+INSERT INTO speciale_equipage (id_equipage, id_speciale, duree) VALUES
 (1, 1, INTERVAL '00:31:23.45'),
 (2, 1, INTERVAL '00:30:55.22'),
 (3, 1, INTERVAL '00:32:14.10'),
@@ -119,7 +118,7 @@ INSERT INTO Speciale_Equipage (id_equipage, id_speciale, duree) VALUES
 (4, 3, INTERVAL '00:26:00.02');
 
 -- Finlande
-INSERT INTO Speciale_Equipage (id_equipage, id_speciale, duree) VALUES
+INSERT INTO speciale_equipage (id_equipage, id_speciale, duree) VALUES
 (1, 4, INTERVAL '00:17:05.30'),
 (2, 4, INTERVAL '00:16:48.20'),
 (3, 4, INTERVAL '00:17:11.75'),
@@ -135,19 +134,20 @@ INSERT INTO Speciale_Equipage (id_equipage, id_speciale, duree) VALUES
 -- Affichage des temps par speciale
 
 select 
-    *
-    FROM 
-    Speciale_Equipage
-    ORDER BY id_speciale
-
+    se.id_equipage,
+    sp.nom_special,
+    se.duree
+   FROM 
+   speciale_equipage se
+   JOIN  speciale sp
+   ON sp.id_speciale = se.id_speciale
+   ORDER BY sp.id_speciale
+;
 -- Affichage du temps global
 
 CREATE OR REPLACE VIEW temps_global as
 select id_equipage,
-        sum(duree) as temps total
-    FROM Speciale_Equipage
+        sum(duree) as temps_total
+    FROM speciale_equipage
     GROUP BY id_equipage
     ORDER BY temps_total asc;
-
-
-
