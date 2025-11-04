@@ -1,4 +1,4 @@
-package com.rallye.rallye.component;
+package com.rallye.component;
 
 import java.security.Key;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.rallye.rallye.dto;
+package com.rallye.dto;
 
 public class AuthRequest {
     private String username;

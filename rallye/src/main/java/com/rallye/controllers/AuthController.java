@@ -1,10 +1,11 @@
+package com.rallye.controllers;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.rallye.rallye.component.JwtUtil;
-import com.rallye.rallye.dto.AuthRequest;
+import com.rallye.component.JwtUtil;
+import com.rallye.dto.AuthRequest;
 
 @RestController
 @RequestMapping("/api/auth")
