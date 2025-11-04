@@ -1,4 +1,4 @@
--- CREATE DATABASE application_rallye
+CREATE DATABASE application_rallye
 -- =============================
 -- TABLE categorie
 -- =============================
@@ -137,9 +137,9 @@ INSERT INTO speciale_equipage (id_equipage, id_speciale, duree) VALUES
 select 
     *
     FROM 
-    speciale_equipage
+    Speciale_Equipage
     ORDER BY id_speciale
-;
+
 -- Affichage du temps global
 
 CREATE OR REPLACE VIEW temps_global as
@@ -148,6 +148,3 @@ select id_equipage,
     FROM speciale_equipage
     GROUP BY id_equipage
     ORDER BY temps_total asc;
-
-
-
